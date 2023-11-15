@@ -1,0 +1,38 @@
+PODS:
+  - Cache (6.0.0)
+  - Charts (4.1.0):
+    - Charts/Core (= 4.1.0)
+  - Charts/Core (4.1.0):
+    - SwiftAlgorithms (~> 1.0)
+  - CoreGPX (0.9.0)
+  - CoreStore (9.2.0)
+  - SnapKit (5.6.0)
+  - SwiftAlgorithms (1.0.0)
+
+DEPENDENCIES:
+  - Cache
+  - Charts
+  - CoreGPX
+  - CoreStore
+  - SnapKit
+
+SPEC REPOS:
+  trunk:
+    - Cache
+    - Charts
+    - CoreGPX
+    - CoreStore
+    - SnapKit
+    - SwiftAlgorithms
+
+SPEC CHECKSUMS:
+  Cache: 4ca7e00363fca5455f26534e5607634c820ffc2d
+  Charts: ce0768268078eee0336f122c3c4ca248e4e204c5
+  CoreGPX: 1381c8c47428c3a6bcac2f93d25ca1c5e3525811
+  CoreStore: 6e7e2010ce7b8ad9cf7348c650020c3d7ea0afb2
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
+
+PODFILE CHECKSUM: c05774a1b3bff7025e0933698ed196a3792b2761
+
+COCOAPODS: 1.11.3
