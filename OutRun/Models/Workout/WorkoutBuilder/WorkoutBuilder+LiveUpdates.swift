@@ -189,7 +189,7 @@ extension WorkoutBuilder {
         performIfAppropriate { (delegate) in
             
             delegate.didUpdate(routeData: self.locationManagement.locations)
-            if let location = lastLocation {
+            if let location = lastLocation {    //checks if lastLocation is not nill
                 delegate.didUpdate(currentLocation: location, force: force)
             }
             

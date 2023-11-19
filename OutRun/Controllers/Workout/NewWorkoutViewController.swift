@@ -247,16 +247,24 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
             }
         }
     }
-    
+    // this function resets the camera view to to make sure user's new position is at center
+    // add feature: publish current location to server / socket
     func didUpdate(currentLocation location: CLLocation, force: Bool) {
-        if !userMovedMap {
+        //Changing view
+        if !userMovedMap {  //why only if user doesnt move map? what happens when user moves map?
             let camera = MKMapCamera(lookingAtCenter: location.coordinate, fromDistance: 200, pitch: 0, heading: location.course)
-            self.mapView?.setCamera(camera, animated: !force)
+            self.mapView?.setCamera(camera, animated: !force)   //setting the map view
         }
+        
+        // Publishing Result
+        print("Current Location: ")
+        print(location.coordinate)
+        
+        
     }
-    
-    func didUpdate(routeData: [CLLocation]) {
-        let coordinates = routeData.map { (location) -> CLLocationCoordinate2D in
+    // i think this function adds the lines which correspond to user's route……but the breakpoint was never triggered??
+    func didUpdate(routeData: [CLLocation]) { //argument is array of CLLocation
+        let coordinates = routeData.map { (location) -> CLLocationCoordinate2D in   //return coordinates of CLLocation
             return location.coordinate
         }
         let overlayReference = routeOverlay
@@ -266,6 +274,7 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
             self.mapView?.removeOverlay(overlay)
         }
     }
+
     
     func didUpdate(uiUpdatesSuspended: Bool) {
         if uiUpdatesSuspended {
