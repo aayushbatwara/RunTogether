@@ -21,6 +21,9 @@
 import UIKit
 import MapKit
 
+/**
+ This is used for the Map Route of a completed workout
+ */
 enum WorkoutMapViewManager {
     
     static func setupRoute(forWorkout workout: Workout, mapView: MKMapView, customEdgePadding: UIEdgeInsets = UIEdgeInsets(top: 40, left: 20, bottom: 40, right: 20), completion: @escaping () -> Void) {

@@ -21,6 +21,9 @@
 import UIKit
 import MapKit
 
+/**
+ I THINK this is only used with completed workouts and their associated maps
+ */
 class WorkoutMapViewController: MapViewControllerWithContainerView, LabelledDiagramViewDelegate {
     
     var workout: Workout?

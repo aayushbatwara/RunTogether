@@ -44,9 +44,7 @@ extension WorkoutBuilderDelegate {
     func didUpdate(energyMeasurement: NSMeasurement) {}
     func didUpdate(paceMeasurement: RelativeMeasurement, rolling: Bool) {}
     func didUpdate(status: WorkoutBuilder.Status) {}
-    func didUpdate(routeData: [CLLocation]) {
-        print("This is triggered")
-    }
+    func didUpdate(routeData: [CLLocation]) {    }
     func didUpdate(currentLocation: CLLocation, force: Bool) {}
     func didUpdate(uiUpdatesSuspended: Bool) {}
     func informOfInsufficientLocationPermission() {}

@@ -13,6 +13,7 @@ target 'OutRun' do
   pod 'CoreStore'
   pod 'CoreGPX'
   pod 'Cache'
+  pod 'Socket.IO-Client-Swift', '~> 15.2.0'
   # pod 'JTAppleCalendar'
 
 end

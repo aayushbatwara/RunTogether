@@ -21,14 +21,19 @@
 import UIKit
 import MapKit
 import SnapKit
+import SocketIO
+
 
 class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuilderDelegate, UIGestureRecognizerDelegate {
     
+    let manager = SocketManager(socketURL: URL(string: "http://10.68.76.197:3000/")!, config: [.log(true), .compress])
+    var socket:SocketIOClient!
+
     var type: Workout.WorkoutType = Workout.WorkoutType(rawValue: UserPreferences.standardWorkoutType.value)
     lazy var builder: WorkoutBuilder = WorkoutBuilder(workoutType: self.type, delegate: self)
     var userMovedMap: Bool = false {
-        didSet {
-            DispatchQueue.main.async {
+        didSet {    //property observer: when ever value of userMovedMap changes, the following code below executes
+            DispatchQueue.main.async {      //this line makes sure UI updates below performed on main thread
                 UIView.animate(withDuration: 0.25) {
                     self.recenterButton.isHidden = !self.userMovedMap
                 }
@@ -128,7 +133,7 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         
         self.headline = LS["Workout.NewWorkout"]
         self.builder = WorkoutBuilder(workoutType: type, delegate: self)
-        mapView?.delegate = WorkoutMapViewDelegate.standard
+        mapView?.delegate = WorkoutMapViewDelegate.standard     //kind of a simgleton implementation
         self.readinessIndicatorView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(displayIndicationAlert)))
         self.recenterButton.isHidden = true
         
@@ -206,6 +211,25 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
             make.bottom.equalTo(safeLayout).offset(-spacing)
             make.height.equalTo(50)
         }
+        
+
+        socket = manager.defaultSocket
+
+        socket.on(clientEvent: .connect) {data, ack in
+            print("socket connected")
+        }
+
+        socket.on(clientEvent: .disconnect) {data, ack in
+            print("socket disconnected")
+        }
+        socket.connect()
+        
+//        socket.on("eventName") { data, ack in
+//            if let eventResponse = data.first as? [String: Any] {
+//                // Handle the event response data
+//            }
+//        }
+
     }
     
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
@@ -257,8 +281,8 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         }
         
         // Publishing Result
-        print("Current Location: ")
-        print(location.coordinate)
+        print("Publishing current location")
+        socket.emit("location", "phone", location.coordinate.latitude, location.coordinate.longitude)
         
         
     }
@@ -267,14 +291,14 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         let coordinates = routeData.map { (location) -> CLLocationCoordinate2D in   //return coordinates of CLLocation
             return location.coordinate
         }
-        let overlayReference = routeOverlay
-        self.routeOverlay = MKPolyline(coordinates: coordinates, count: routeData.count)
-        self.mapView?.addOverlay(routeOverlay!, level: .aboveRoads)
-        if let overlay = overlayReference {
+        let overlayReference = routeOverlay     //what is route overlay
+        self.routeOverlay = MKPolyline(coordinates: coordinates, count: routeData.count)    //indicates route defined by coordinates
+        self.mapView?.addOverlay(routeOverlay!, level: .aboveRoads)     //add to mapview
+        if let overlay = overlayReference {     //removes the previous overlay if it was defined. skipped in first go but not in subsequent ones
             self.mapView?.removeOverlay(overlay)
         }
     }
-
+//breakpoints hitting even when route lines not generated……figure out
     
     func didUpdate(uiUpdatesSuspended: Bool) {
         if uiUpdatesSuspended {

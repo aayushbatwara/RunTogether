@@ -23,14 +23,14 @@ import MapKit
 
 class WorkoutMapViewDelegate: NSObject, MKMapViewDelegate {
     
-    static let standard = WorkoutMapViewDelegate()
+    static let standard = WorkoutMapViewDelegate()      //kind of a simgleton implementation
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        let renderer = MKPolylineRenderer(overlay: overlay)
+        let renderer = MKPolylineRenderer(overlay: overlay)     //This is what renders the lines
         renderer.strokeColor = .accentColor
         renderer.lineWidth = 8.0
         
-        return renderer
+        return renderer     //this returned MKOverlayRenderer has the overlay
     }
     
 }

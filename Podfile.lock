@@ -7,6 +7,9 @@ PODS:
   - CoreGPX (0.9.0)
   - CoreStore (9.2.0)
   - SnapKit (5.6.0)
+  - Socket.IO-Client-Swift (15.2.0):
+    - Starscream (~> 3.1)
+  - Starscream (3.1.1)
   - SwiftAlgorithms (1.0.0)
 
 DEPENDENCIES:
@@ -15,6 +18,7 @@ DEPENDENCIES:
   - CoreGPX
   - CoreStore
   - SnapKit
+  - Socket.IO-Client-Swift (~> 15.2.0)
 
 SPEC REPOS:
   trunk:
@@ -23,6 +27,8 @@ SPEC REPOS:
     - CoreGPX
     - CoreStore
     - SnapKit
+    - Socket.IO-Client-Swift
+    - Starscream
     - SwiftAlgorithms
 
 SPEC CHECKSUMS:
@@ -31,8 +37,10 @@ SPEC CHECKSUMS:
   CoreGPX: 1381c8c47428c3a6bcac2f93d25ca1c5e3525811
   CoreStore: 6e7e2010ce7b8ad9cf7348c650020c3d7ea0afb2
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  Socket.IO-Client-Swift: 1e3e3a1f09f3312a167f0d781eb2f383d477357c
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
 
-PODFILE CHECKSUM: c05774a1b3bff7025e0933698ed196a3792b2761
+PODFILE CHECKSUM: 5d1688b7714f92db843b9f36b44f50f50598e097
 
 COCOAPODS: 1.11.3
