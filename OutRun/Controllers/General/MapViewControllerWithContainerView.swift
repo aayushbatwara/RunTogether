@@ -23,7 +23,7 @@ import MapKit
 
 class MapViewControllerWithContainerView: DetailViewController {
     
-    var mapView: MKMapView? = {
+    var mapView: MKMapView? = {    //this is a closure, an encapsualted block of functionality and an object too
         let mapView = MKMapView()
         mapView.showsUserLocation = true
         mapView.showsCompass = false

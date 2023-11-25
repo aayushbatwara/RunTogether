@@ -26,7 +26,7 @@ import SocketIO
 
 class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuilderDelegate, UIGestureRecognizerDelegate {
     
-    let manager = SocketManager(socketURL: URL(string: "http://10.68.76.197:3000/")!, config: [.log(true), .compress])
+    let manager = SocketManager(socketURL: URL(string: "http://192.168.0.77:3000/")!, config: [.log(false), .compress])
     var socket:SocketIOClient!
 
     var type: Workout.WorkoutType = Workout.WorkoutType(rawValue: UserPreferences.standardWorkoutType.value)
@@ -114,6 +114,7 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
     }
     
     var routeOverlay: MKOverlay?
+    var routeOverlay2: MKOverlay?
     
     var blurView = UIVisualEffectView(effect: UIBlurEffect(style: {
         if #available(iOS 13.0, *) {
@@ -291,12 +292,26 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         let coordinates = routeData.map { (location) -> CLLocationCoordinate2D in   //return coordinates of CLLocation
             return location.coordinate
         }
+
         let overlayReference = routeOverlay     //what is route overlay
         self.routeOverlay = MKPolyline(coordinates: coordinates, count: routeData.count)    //indicates route defined by coordinates
+        
         self.mapView?.addOverlay(routeOverlay!, level: .aboveRoads)     //add to mapview
+
         if let overlay = overlayReference {     //removes the previous overlay if it was defined. skipped in first go but not in subsequent ones
             self.mapView?.removeOverlay(overlay)
         }
+        
+        let coordinates2 = routeData.map { (location) -> CLLocationCoordinate2D in   //return coordinates of CLLocation
+            return CLLocationCoordinate2D(latitude: location.coordinate.latitude,
+                                          longitude: (location.coordinate.longitude + 0.00001))
+        }
+//        let overlayReference2 = routeOverlay2
+//        self.routeOverlay2 = MKPolyline(coordinates: coordinates2, count: routeData.count)
+//        self.mapView?.addOverlay(routeOverlay2!, level: .aboveRoads)     //add to mapview
+//        if let overlay2 = overlayReference2 {     //removes the previous overlay if it was defined. skipped in first go but not in subsequent ones
+//            self.mapView?.removeOverlay(overlay2)
+//        }
     }
 //breakpoints hitting even when route lines not generated……figure out
     
