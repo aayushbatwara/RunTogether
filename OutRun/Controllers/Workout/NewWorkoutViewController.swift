@@ -282,8 +282,8 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         }
         
         // Publishing Result
-        print("Publishing current location")
-        socket.emit("location", "phone", location.coordinate.latitude, location.coordinate.longitude)
+//        print("Publishing current location")
+//        socket.emit("location", "phone", location.coordinate.latitude, location.coordinate.longitude)
         
         
     }
@@ -292,9 +292,14 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         let coordinates = routeData.map { (location) -> CLLocationCoordinate2D in   //return coordinates of CLLocation
             return location.coordinate
         }
+        let coordinates2 = routeData.map { (location) -> CLLocationCoordinate2D in   //return coordinates of CLLocation
+            return CLLocationCoordinate2D(latitude: location.coordinate.latitude,
+                                          longitude: (location.coordinate.longitude + 0.0001))
+        }
 
         let overlayReference = routeOverlay     //what is route overlay
-        self.routeOverlay = MKPolyline(coordinates: coordinates, count: routeData.count)    //indicates route defined by coordinates
+//        self.routeOverlay = MKMultiPolyline([MKPolyline(coordinates: coordinates, count: routeData.count), MKPolyline(coordinates: coordinates2, count: routeData.count) ])   //indicates route defined by coordinates
+        self.routeOverlay = BreadcrumbPath(locations: routeData)
         
         self.mapView?.addOverlay(routeOverlay!, level: .aboveRoads)     //add to mapview
 
@@ -302,10 +307,6 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
             self.mapView?.removeOverlay(overlay)
         }
         
-        let coordinates2 = routeData.map { (location) -> CLLocationCoordinate2D in   //return coordinates of CLLocation
-            return CLLocationCoordinate2D(latitude: location.coordinate.latitude,
-                                          longitude: (location.coordinate.longitude + 0.00001))
-        }
 //        let overlayReference2 = routeOverlay2
 //        self.routeOverlay2 = MKPolyline(coordinates: coordinates2, count: routeData.count)
 //        self.mapView?.addOverlay(routeOverlay2!, level: .aboveRoads)     //add to mapview
