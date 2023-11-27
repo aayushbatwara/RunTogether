@@ -113,8 +113,7 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         self.mapView?.setCamera(camera, animated: true)
     }
     
-    var routeOverlay: MKOverlay?
-    var routeOverlay2: MKOverlay?
+    var routeOverlays: [MKOverlay]?
     
     var blurView = UIVisualEffectView(effect: UIBlurEffect(style: {
         if #available(iOS 13.0, *) {
@@ -296,15 +295,19 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
             return CLLocationCoordinate2D(latitude: location.coordinate.latitude,
                                           longitude: (location.coordinate.longitude + 0.0001))
         }
-
-        let overlayReference = routeOverlay     //what is route overlay
-//        self.routeOverlay = MKMultiPolyline([MKPolyline(coordinates: coordinates, count: routeData.count), MKPolyline(coordinates: coordinates2, count: routeData.count) ])   //indicates route defined by coordinates
-        self.routeOverlay = BreadcrumbPath(locations: routeData)
+        let routeData2:[CLLocation] = routeData.map { (location) -> CLLocation in   //return coordinates of CLLocation
+            return CLLocation(latitude: location.coordinate.latitude,
+                                          longitude: (location.coordinate.longitude + 0.0001))
+        }
         
-        self.mapView?.addOverlay(routeOverlay!, level: .aboveRoads)     //add to mapview
+        
+        let overlayReference = routeOverlays
+        self.routeOverlays = [BreadcrumbPath(locations: routeData), BreadcrumbPath(locations: routeData2)]
+        
+        self.mapView?.addOverlays(routeOverlays!, level: .aboveRoads)     //add to mapview
 
-        if let overlay = overlayReference {     //removes the previous overlay if it was defined. skipped in first go but not in subsequent ones
-            self.mapView?.removeOverlay(overlay)
+        if let overlays = overlayReference {     //removes the previous overlay if it was defined. skipped in first go but not in subsequent ones
+            self.mapView?.removeOverlays(overlays)
         }
         
 //        let overlayReference2 = routeOverlay2

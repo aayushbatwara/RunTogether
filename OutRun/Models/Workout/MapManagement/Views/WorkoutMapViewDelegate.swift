@@ -27,18 +27,18 @@ class WorkoutMapViewDelegate: NSObject, MKMapViewDelegate {
     var breadcrumbPathRenderer: BreadcrumbPathRenderer?
     
 
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if let overlay = overlay as? BreadcrumbPath {
+    func mapView(_ mapView: MKMapView, rendererFor overlays: [MKOverlay]) -> MKOverlayRenderer {
+        if let overlays = overlays as? BreadcrumbPath {
 //            print("breadcrumb path renderer used")
 //            if breadcrumbPathRenderer == nil {
 //                breadcrumbPathRenderer = BreadcrumbPathRenderer(crumbPath: overlay)
 //            }
-            breadcrumbPathRenderer = BreadcrumbPathRenderer(crumbPath: overlay)
+            breadcrumbPathRenderer = BreadcrumbPathRenderer(crumbPath: overlays[0], crumbPath2: overlays[1])
 
             return breadcrumbPathRenderer!
         } else {    //default renderer
             print("breadcrumb path renderer NOT used")
-            let renderer = MKPolylineRenderer(overlay: overlay)     //This is what renders the lines
+            let renderer = MKPolylineRenderer(overlay: overlays[0])     //This is what renders the lines
             renderer.strokeColor = .accentColor
             renderer.lineWidth = 8.0
             

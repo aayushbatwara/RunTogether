@@ -51,30 +51,30 @@ class BreadcrumbPathRenderer: MKOverlayRenderer {
          and the `locations` property of the `BreadcrumbPath` updates frequently,
          `locations` needs to guard against data races. See the comments in `BreadcrumbPath` for details.
          */
-        let points = crumbs.locations.map { location in
-            MKMapPoint(location.coordinate)
-        }
-        if let path = pathForPoints(points, mapRect: clipRect, zoomScale: zoomScale) {
-            context.addPath(path)
-//            context.setStrokeColor(UIColorsystemBlue.withAlphaComponent(0.5).cgColor)
-            context.setStrokeColor(UIColor.systemOrange.cgColor)
-            context.setLineJoin(.round)
-            context.setLineCap(.round)
-            context.setLineWidth(lineWidth)
-//            renderer.lineWidth = 8.0
-            context.strokePath()
-        }
-        
-        let points2 = crumbs2.locations.map { location in
-            MKMapPoint(CLLocation(latitude: location.coordinate.latitude - 0.00004, longitude: location.coordinate.longitude + 0.00004).coordinate)
-        }
-        if let path2 = pathForPoints(points2, mapRect: clipRect, zoomScale: zoomScale) {
-            context.addPath(path2)
-            context.setStrokeColor(UIColor.systemBlue.cgColor)
-            context.setLineJoin(.round)
-            context.setLineCap(.round)
-            context.setLineWidth(lineWidth)
-            context.strokePath()
+        var i = 0;
+        let colors = [UIColor.systemOrange.cgColor, UIColor.systemOrange.cgColor]
+        while (i < 2) {
+            var points: [MKMapPoint];
+            if (i == 1){
+                points = crumbs.locations.map { location in
+                    MKMapPoint(location.coordinate)
+            }}
+            else{
+                points = crumbs2.locations.map { location in
+                    MKMapPoint(location.coordinate)
+                }
+            }
+            if let path = pathForPoints(points, mapRect: clipRect, zoomScale: zoomScale) {
+                context.addPath(path)
+    //            context.setStrokeColor(UIColorsystemBlue.withAlphaComponent(0.5).cgColor)
+                context.setStrokeColor(colors[i])
+                context.setLineJoin(.round)
+                context.setLineCap(.round)
+                context.setLineWidth(lineWidth)
+    //            renderer.lineWidth = 8.0
+                context.strokePath()
+            };
+            i+=1
         }
     }
     
