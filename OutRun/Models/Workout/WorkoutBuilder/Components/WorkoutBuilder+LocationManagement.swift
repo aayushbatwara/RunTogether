@@ -30,7 +30,7 @@ extension WorkoutBuilder {
         
         /// the recorded locations
         public private(set) var locations: [CLLocation] = [] {
-            didSet {
+            didSet { //this is called after (re ?)-setting the variable of lcoations
                 if let location = self.locations.last {
                     self.builder?.notfiyOfLocationUpdate(with: location)
                 }
