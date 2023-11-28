@@ -223,7 +223,7 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         socket.on(clientEvent: .disconnect) {data, ack in
             print("socket disconnected")
         }
-        socket.connect()
+//        socket.connect()
         
 //        socket.on("eventName") { data, ack in
 //            if let eventResponse = data.first as? [String: Any] {

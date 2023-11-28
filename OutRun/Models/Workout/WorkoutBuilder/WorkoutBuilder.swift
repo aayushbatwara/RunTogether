@@ -268,6 +268,15 @@ class WorkoutBuilder: ApplicationStateObserver {
         }
         
     }
+    /**
+     Notifies the `WorkoutBuilder` of a location update of accompanying user
+     - parameter location: the last received location
+     */
+    public func notfiyOfLocationUpdateAccompanier(with location: CLLocation) {
+        
+        self.liveUpdateLocationsAccompanier(withLast: location)
+        
+    }
     
     /**
      Notifies the `WorkoutBuilder` of a distance update

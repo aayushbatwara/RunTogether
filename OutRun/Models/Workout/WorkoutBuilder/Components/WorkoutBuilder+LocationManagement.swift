@@ -28,11 +28,19 @@ extension WorkoutBuilder {
         
         // MARK: Public
         
-        /// the recorded locations
+        /// the recorded locations of main user
         public private(set) var locations: [CLLocation] = [] {
             didSet { //this is called after (re ?)-setting the variable of lcoations
                 if let location = self.locations.last {
                     self.builder?.notfiyOfLocationUpdate(with: location)
+                }
+            }
+        }
+        /// the recorded locations of accompanying user
+        public private(set) var locationsAccompanier: [CLLocation] = [] {
+            didSet { //this is called after (re ?)-setting the variable of lcoations
+                if let location = self.locationsAccompanier.last {
+                    self.builder?.notfiyOfLocationUpdateAccompanier(with: location)
                 }
             }
         }
@@ -55,6 +63,33 @@ extension WorkoutBuilder {
         public func startLocationUpdates() {
             self.locationManager.startUpdatingLocation()
         }
+        // Define a function that will be executed on the thread
+        @objc func threadFunction() {
+            print("hello")
+            print("Thread started")
+            
+            // Perform some work or task on the thread
+            
+            print("Thread finished")
+        }
+        @objc func sayHello()
+        {
+            if let newLocation = self.locations.last{
+                self.locationsAccompanier.append(CLLocation(latitude: newLocation.coordinate.latitude, longitude: newLocation.coordinate.longitude + 0.0001))
+            }
+            else{
+                NSLog("Location not set yet!")
+            }
+        }
+        public func startLocationUpdatesAccompanier() {
+            print("hello world")
+
+            var helloWorldTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.sayHello), userInfo: nil, repeats: true)
+
+         
+
+        }
+        
         
         // MARK: Protected
         
@@ -136,7 +171,8 @@ extension WorkoutBuilder {
             self.locationManager.showsBackgroundLocationIndicator = true
             self.locationManager.requestWhenInUseAuthorization()
             self.locationManager.startUpdatingLocation()
-            
+            self.startLocationUpdatesAccompanier()
+
         }
         
         /**
