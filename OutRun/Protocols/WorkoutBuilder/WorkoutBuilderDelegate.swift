@@ -29,7 +29,7 @@ protocol WorkoutBuilderDelegate: class {
     func didUpdate(energyMeasurement: NSMeasurement)
     func didUpdate(paceMeasurement: RelativeMeasurement, rolling: Bool)
     func didUpdate(status: WorkoutBuilder.Status)
-    func didUpdate(routeData: [CLLocation])
+    func didUpdate(routeData: [CLLocation], mainUser: Bool)
     func didUpdate(currentLocation location: CLLocation, force: Bool)
     func didUpdate(uiUpdatesSuspended: Bool)
     func informOfInsufficientLocationPermission()

@@ -288,34 +288,34 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         
     }
     // i think this function adds the lines which correspond to user's route……but the breakpoint was never triggered??
-    func didUpdate(routeData: [CLLocation]) { //argument is array of CLLocation
+    func didUpdate(routeData: [CLLocation], mainUser: Bool) { //argument is array of CLLocation
         let coordinates = routeData.map { (location) -> CLLocationCoordinate2D in   //return coordinates of CLLocation
             return location.coordinate
         }
-
-        let overlayReference = routeOverlay     //what is route overlay
-        let polyline = MKPolyline(coordinates: coordinates, count: routeData.count)
-        polyline.title = "original"
-        self.routeOverlay = polyline
         
-        self.mapView?.addOverlay(routeOverlay!, level: .aboveRoads)     //add to mapview
+        if mainUser{
+            let overlayReference = routeOverlay     //what is route overlay
+            let polyline = MKPolyline(coordinates: coordinates, count: routeData.count)
+            polyline.title = "original"
+            self.routeOverlay = polyline
+            
+            self.mapView?.addOverlay(routeOverlay!, level: .aboveRoads)     //add to mapview
 
-        if let overlay = overlayReference {     //removes the previous overlay if it was defined. skipped in first go but not in subsequent ones
-            self.mapView?.removeOverlay(overlay)
+            if let overlay = overlayReference {     //removes the previous overlay if it was defined. skipped in first go but not in subsequent ones
+                self.mapView?.removeOverlay(overlay)
+            }
+
+        } else {
+            let overlayReference2 = routeOverlay2
+            let polyline2 = MKPolyline(coordinates: coordinates, count: routeData.count)
+            polyline2.title = "accompanier"
+            self.routeOverlay2 = polyline2
+            self.mapView?.addOverlay(routeOverlay2!, level: .aboveRoads)     //add to mapview
+            if let overlay2 = overlayReference2 {     //removes the previous overlay if it was defined. skipped in first go but not in subsequent ones
+                self.mapView?.removeOverlay(overlay2)
+            }
         }
-        
-        let coordinates2 = routeData.map { (location) -> CLLocationCoordinate2D in   //return coordinates of CLLocation
-            return CLLocationCoordinate2D(latitude: location.coordinate.latitude,
-                                          longitude: (location.coordinate.longitude + 0.0001))
-        }
-        let overlayReference2 = routeOverlay2
-        let polyline2 = MKPolyline(coordinates: coordinates2, count: routeData.count)
-        polyline2.title = "accompanier"
-        self.routeOverlay2 = polyline2
-        self.mapView?.addOverlay(routeOverlay2!, level: .aboveRoads)     //add to mapview
-        if let overlay2 = overlayReference2 {     //removes the previous overlay if it was defined. skipped in first go but not in subsequent ones
-            self.mapView?.removeOverlay(overlay2)
-        }
+
     }
 //breakpoints hitting even when route lines not generated……figure out
     

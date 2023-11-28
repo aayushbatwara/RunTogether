@@ -188,11 +188,24 @@ extension WorkoutBuilder {
         
         performIfAppropriate { (delegate) in
             
-            delegate.didUpdate(routeData: self.locationManagement.locations)
+            delegate.didUpdate(routeData: self.locationManagement.locations, mainUser: true)
             if let location = lastLocation {    //checks if lastLocation is not nill
                 delegate.didUpdate(currentLocation: location, force: force)
             }
+            self.liveUpdateAccompanierLocations(withLast: lastLocation)
             
+        }
+        
+    }
+    /**
+     Live updates the accompanier's location and route of the workout
+     - parameter locations: the locations recorded so far
+     - parameter force: a boolean describing whether a delegate update for the current location should be forced (carried out without an animation)
+     */
+    public func liveUpdateAccompanierLocations(withLast lastLocation: CLLocation? = nil, force: Bool = false) {
+        
+        performIfAppropriate { (delegate) in
+            delegate.didUpdate(routeData: self.locationManagement.locations, mainUser: false)
         }
         
     }
