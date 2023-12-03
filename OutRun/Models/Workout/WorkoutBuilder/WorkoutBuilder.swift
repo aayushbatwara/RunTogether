@@ -197,6 +197,7 @@ class WorkoutBuilder: ApplicationStateObserver {
     public func actOnDismiss() {
         
         self.locationManagement.stopLocationUpdates()
+        self.locationManagement.stopLocationUpdatesAccompanier()
         
         self.reset()
         

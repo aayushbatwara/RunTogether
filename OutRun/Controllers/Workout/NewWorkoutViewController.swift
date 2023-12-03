@@ -21,13 +21,11 @@
 import UIKit
 import MapKit
 import SnapKit
-import SocketIO
 
 
 class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuilderDelegate, UIGestureRecognizerDelegate {
     
-    let manager = SocketManager(socketURL: URL(string: "http://192.168.0.77:3000/")!, config: [.log(false), .compress])
-    var socket:SocketIOClient!
+
 
     var type: Workout.WorkoutType = Workout.WorkoutType(rawValue: UserPreferences.standardWorkoutType.value)
     lazy var builder: WorkoutBuilder = WorkoutBuilder(workoutType: self.type, delegate: self)
@@ -212,25 +210,6 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
             make.bottom.equalTo(safeLayout).offset(-spacing)
             make.height.equalTo(50)
         }
-        
-
-        socket = manager.defaultSocket
-
-        socket.on(clientEvent: .connect) {data, ack in
-            print("socket connected")
-        }
-
-        socket.on(clientEvent: .disconnect) {data, ack in
-            print("socket disconnected")
-        }
-//        socket.connect()
-        
-//        socket.on("eventName") { data, ack in
-//            if let eventResponse = data.first as? [String: Any] {
-//                // Handle the event response data
-//            }
-//        }
-
     }
     
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
@@ -273,18 +252,13 @@ class NewWorkoutViewController: MapViewControllerWithContainerView, WorkoutBuild
         }
     }
     // this function resets the camera view to to make sure user's new position is at center
-    // add feature: publish current location to server / socket
     func didUpdate(currentLocation location: CLLocation, force: Bool) {
         //Changing view
         if !userMovedMap {  //why only if user doesnt move map? what happens when user moves map?
             let camera = MKMapCamera(lookingAtCenter: location.coordinate, fromDistance: 200, pitch: 0, heading: location.course)
             self.mapView?.setCamera(camera, animated: !force)   //setting the map view
         }
-        
-        // Publishing Result
-//        print("Publishing current location")
-//        socket.emit("location", "phone", location.coordinate.latitude, location.coordinate.longitude)
-        
+
         
     }
     // i think this function adds the lines which correspond to user's route……but the breakpoint was never triggered??

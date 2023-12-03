@@ -20,6 +20,8 @@
 
 import Foundation
 import CoreLocation
+import SocketIO
+import UIKit
 
 extension WorkoutBuilder {
     
@@ -27,19 +29,25 @@ extension WorkoutBuilder {
     class LocationManagement: NSObject, WorkoutBuilderComponent, CLLocationManagerDelegate {
         
         // MARK: Public
-        
+        public var manager = SocketManager(socketURL: URL(string: "https://welcome-tightly-finch.ngrok-free.app")!, config: [.log(true), .compress, .extraHeaders(["ngrok-skip-browser-warning" : "anyValue"])])
+        public var socket:SocketIOClient!
+        private var username: String;
+        private var accompanierUsername:String = "";
+
         /// the recorded locations of main user
         public private(set) var locations: [CLLocation] = [] {
             didSet { //this is called after (re ?)-setting the variable of lcoations
                 if let location = self.locations.last {
+                    socket.emit("location", username, location.coordinate.latitude, location.coordinate.longitude)
                     self.builder?.notfiyOfLocationUpdate(with: location)
                 }
             }
         }
         /// the recorded locations of accompanying user
         public private(set) var locationsAccompanier: [CLLocation] = [] {
-            didSet { //this is called after (re ?)-setting the variable of lcoations
+            didSet {
                 if let location = self.locationsAccompanier.last {
+                    print("propogating location down")
                     self.builder?.notfiyOfLocationUpdateAccompanier(with: location)
                 }
             }
@@ -63,16 +71,14 @@ extension WorkoutBuilder {
         public func startLocationUpdates() {
             self.locationManager.startUpdatingLocation()
         }
-        // Define a function that will be executed on the thread
-        @objc func threadFunction() {
-            print("hello")
-            print("Thread started")
-            
-            // Perform some work or task on the thread
-            
-            print("Thread finished")
+        /**
+         Stop accompanier location updates
+         */
+        public func stopLocationUpdatesAccompanier() {
+            self.socket.disconnect()
         }
-        @objc func sayHello()
+
+        @objc func mockLocationsGenerator()
         {
             if let newLocation = self.locations.last{
                 self.locationsAccompanier.append(CLLocation(latitude: newLocation.coordinate.latitude, longitude: newLocation.coordinate.longitude + 0.0001))
@@ -81,13 +87,9 @@ extension WorkoutBuilder {
                 NSLog("Location not set yet!")
             }
         }
-        public func startLocationUpdatesAccompanier() {
-            print("hello world")
-
-            var helloWorldTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.sayHello), userInfo: nil, repeats: true)
-
-         
-
+        
+        public func mockLocationUpdatesAccompanier() {
+            var helloWorldTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.mockLocationsGenerator), userInfo: nil, repeats: true)
         }
         
         
@@ -157,6 +159,15 @@ extension WorkoutBuilder {
          Initialises a `LocationManagement` instance, setting up the internal `CLLocationManager` and starting to receive locations
          */
         public override init() {
+            socket = manager.defaultSocket
+            socket.connect()
+
+            if let user = UserPreferences.name.value{
+                self.username = user
+            }
+            else {
+                self.username = UIDevice.current.name
+            }
             
             super.init()
             
@@ -171,7 +182,29 @@ extension WorkoutBuilder {
             self.locationManager.showsBackgroundLocationIndicator = true
             self.locationManager.requestWhenInUseAuthorization()
             self.locationManager.startUpdatingLocation()
-            self.startLocationUpdatesAccompanier()
+//            self.mockLocationUpdatesAccompanier()
+            
+            
+            //Socket Event Handling
+            socket.on(clientEvent: .connect) {data, ack in
+                print("socket connected")
+            }
+
+            socket.on(clientEvent: .disconnect) {data, ack in
+                print("socket disconnected")
+            }
+
+            socket.on("location") { data, ack in
+                guard let lat = data[1] as? Double else { return }
+                guard let long = data[2] as? Double else { return }
+                print("socket event handling")
+                self.locationsAccompanier.append(
+                    CLLocation(
+                        latitude: CLLocationDegrees(lat),
+                        longitude: CLLocationDegrees(long))
+                )
+            }
+
 
         }
         

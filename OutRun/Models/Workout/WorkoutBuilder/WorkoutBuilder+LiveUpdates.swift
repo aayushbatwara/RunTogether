@@ -203,11 +203,7 @@ extension WorkoutBuilder {
     public func liveUpdateLocationsAccompanier(withLast lastLocation: CLLocation? = nil, force: Bool = false) {
         
         performIfAppropriate { (delegate) in
-            delegate.didUpdate(routeData: self.locationManagement.locations.map { (location) -> CLLocation in   //return coordinates of CLLocation
-                return CLLocation(latitude: location.coordinate.latitude,
-                                              longitude: (location.coordinate.longitude + 0.0001))
-                
-            }, mainUser: false)
+            delegate.didUpdate(routeData: self.locationManagement.locationsAccompanier, mainUser: false)
         }
         
     }
